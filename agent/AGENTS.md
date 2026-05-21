@@ -70,4 +70,20 @@ When you have nothing to say, respond with ONLY: `NO_REPLY` (entire message, not
 
 Use productively. Don't just reply `HEARTBEAT_OK`. Edit workspace `HEARTBEAT.md` with checklist. Batch checks (email, calendar, weather). Use cron for exact timing.
 
+## Health Monitor (Cron-Driven)
+
+When you receive a `[HEALTH-MONITOR]` system event:
+
+1. `openclaw gateway status` — running? reachable?
+2. `openclaw tasks list --active` — any pending work?
+3. **If healthy:** log "healthy check passed" to `memory/YYYY-MM-DD.md`, stay silent. No restart, no report.
+4. **If unhealthy AND no pending tasks:** `openclaw gateway restart`, poll up to 60s, run post-restart audit
+5. **If unhealthy AND pending tasks:** log "skip — pending queue" to `memory/YYYY-MM-DD.md`, then `cron wake` a follow-up check in 10 min
+6. Report **only** on failure or restart. Healthy + idle = silent.
+
+Rules:
+- **Unscheduled restarts only.** Never restart on a timer.
+- Never restart if tasks pending — always skip and retry
+- Follow-up wake uses `text: [HEALTH-MONITOR] Follow-up check after skip` + `mode: next-heartbeat`
+
 
