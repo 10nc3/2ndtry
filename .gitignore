@@ -1,0 +1,16 @@
+# OpenClaw workspace — sensitive files
+.env
+.env.*
+.openclaw/
+config-*.json5
+config-*.json
+secrets/
+*.key
+*.pem
+memory/
+
+# Ignore node_modules if any local dev
+node_modules/
+
+# OS files
+.DS_Store
