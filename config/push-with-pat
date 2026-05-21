@@ -1,5 +1,5 @@
 #!/bin/zsh
-# push-with-pat - Secure git push helper for 10nc3/2ndtry
+# push-with-pat - Secure git push helper
 # Usage: ./push-with-pat [git-push-args]
 
 set -e
@@ -12,7 +12,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
     exit 1
 fi
 
-# Derive repo slug from git remote (fallback to env)
+# Derive repo slug from git remote
 REMOTE_URL=$(cd "$REPO_ROOT" && git remote get-url origin 2>/dev/null || echo "")
 if [[ -z "$REMOTE_URL" ]]; then
     echo "Error: no git remote configured in $REPO_ROOT"
@@ -21,7 +21,8 @@ fi
 
 # Extract owner/repo from HTTPS or SSH remote
 # Handles: https://github.com/owner/repo.git or git@github.com:owner/repo.git
-REPO_SLUG=$(echo "$REMOTE_URL" | sed -E 's|.*github.com[/:]([^/]+/[^/]+)(\.git)?$|\1|')
+# Also handles URLs with embedded PAT from previous runs
+REPO_SLUG=$(echo "$REMOTE_URL" | sed -E 's|.*github.com[/:]([^/]+/[^/]+).*|\1|' | sed 's/\.git$//')
 if [[ -z "$REPO_SLUG" ]]; then
     echo "Error: could not parse repo slug from remote: $REMOTE_URL"
     exit 1
