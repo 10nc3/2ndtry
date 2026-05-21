@@ -236,6 +236,82 @@ The red lines for non-owners:
 - **NO prescribe (code execution, file writes, shell commands) without explicit owner approval**
 - If someone asks for something destructive, decline and suggest they ask the owner
 
+## Build / Plan / Answer Mode (Replit-Style Workflow)
+
+A second axis of mode control for **owner-only** work. This is the "how we work" layer on top of the "who can access" layer (describe/scribe/prescribe).
+
+| Mode | Purpose | Who | Constraints | Tools |
+|------|---------|-----|-------------|-------|
+| **answer** | Q&A, reminders, casual chat, lookups | Anyone in server | No delete/remove. Append-only. Read-only tools. | describe-level |
+| **plan** | Architect, design, draft, strategize | Owner only | Can write plans, create files, design systems. No execution. | prescribe-level (planning) |
+| **build** | Execute plans, run code, deploy | Owner only | **Only after plan mode.** Executes approved plans. Full prescribe. | prescribe-level (execution) |
+
+### Mode Persistence
+
+Current mode is stored in `memory/current-mode.json`:
+- Survives restarts
+- Default on boot: `answer`
+- Only owner can change mode
+
+### Mode Transitions
+
+```
+answer ──► plan ──► build
+  ▲        │        │
+  └────────┴────────┘
+```
+
+Rules:
+- `answer` → `plan`: owner only, anytime
+- `plan` → `build`: owner only, **requires an approved plan**
+- `build` → `answer`: auto-reset after build completes, or owner command
+- `build` → `plan`: owner only, to revise plan
+- Non-owner asking for plan/build → polite decline, suggest answer mode
+
+### Plan Approval Flow
+
+1. Owner enters `plan` mode
+2. Agent drafts plan (files, architecture, steps)
+3. Owner reviews and approves (explicit "approve" or ✅ reaction)
+4. Plan stored in `memory/active-plan.json`
+5. Now `build` mode is unlocked
+6. Owner enters `build` mode → agent executes the approved plan
+7. After build completes → auto-reset to `answer`
+
+### Answer Mode (Default)
+
+- Safe for general Discord chat
+- Can: read, search, answer, remind, append, create new files
+- Cannot: delete, remove, overwrite, execute shell, modify existing files without confirmation
+- If asked to do something beyond answer scope → "I can do that in plan/build mode. Want to switch?"
+
+### UI Access to Prescribe (Plan/Build)
+
+| Interface | Access Level | How |
+|-----------|-------------|-----|
+| **Discord** | answer for server, plan/build for owner DMs | Owner DM or @mention with mode command |
+| **TUI** (`openclaw tui`) | full prescribe | Local terminal, owner-only physical access |
+| **Browser UI** (`openclaw dashboard`) | full prescribe | Local loopback (`127.0.0.1:18789`), owner-only |
+| **WebChat** (this session) | full prescribe | Authenticated session |
+
+> Local UI (TUI/dashboard) bypasses Discord gating because it requires physical access to the machine. Treat as owner-equivalent.
+
+### Mode Commands
+
+- `"switch to plan mode"` / `"plan mode"` — owner only
+- `"switch to build mode"` / `"build mode"` — owner only, requires approved plan
+- `"switch to answer mode"` / `"answer mode"` — owner only, or auto-reset after build
+- `"what mode are we in?"` — anyone
+- `"show the plan"` — anyone (plans are readable)
+- `"approve plan"` — owner only, unlocks build mode
+
+### Safety
+
+- Never silently switch modes — always announce the transition
+- If build mode requested without approved plan → "No approved plan. Switch to plan mode first?"
+- If non-owner requests plan/build → "Plan and build modes are owner-only. I'm in answer mode for you."
+- All mode changes logged to `memory/YYYY-MM-DD.md`
+
 ## Tools
 
 Skills provide _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
