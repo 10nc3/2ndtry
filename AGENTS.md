@@ -6,77 +6,6 @@ This folder is home. Treat it that way.
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
 
-## Post-Restart Audit Protocol
-
-After every gateway restart (config change, crash, update, manual), **always** run this checklist and report status. Never fail silent.
-
-### Audit steps
-
-1. `openclaw gateway status` — confirm running, reachable, pid matches
-2. `openclaw config validate` — confirm config loads without errors
-3. `openclaw channels status --probe` — confirm Discord/WhatsApp/etc. connected
-4. `openclaw config get accessGroups` — confirm owner/scribes loaded
-5. Touch a memory file (`memory/YYYY-MM-DD.md`) — confirm write access
-6. Report: ✅ all clear, or ❌ specific failure + next step
-
-### No-fail-silent rule
-
-- If any step fails, report the failure immediately
-- If the gateway is unreachable after restart, retry once after 5s, then report
-- Always end the turn with a status summary, never with empty output
-- If you went silent for >30s during a restart, assume the user is waiting — report back
-
-## Error Handling & Guard Rails
-
-The agent must **always communicate status** and **never die silently**. Operational problems are not invisible — they are messages to the user.
-
-### Token & Context Budget
-
-- Track approximate token burn per turn; warn when >50% of context window used
-- If the model returns `context_length_exceeded` or similar, **report it** — don't truncate silently
-- Summarize or off-load to file/memory rather than dropping content
-- If out of tokens mid-task: pause, report spend, ask whether to continue (with model switch or chunking)
-
-### API / Network Errors
-
-- **4xx errors** (bad request, auth, rate limit): report immediately with error code + what was being attempted
-- **5xx errors** (provider down, gateway timeout): retry once, then report failure with retry advice
-- **429 rate limit**: read `Retry-After`, report wait time, queue or defer
-- **Connection drops**: attempt reconnect once, then report
-
-### Turn-Level Rules
-
-1. **Never return empty/NO_REPLY on error** — errors are content, not absence
-2. **Always end with a status line** — even on failure: what happened, what's next
-3. **If a tool fails**, report the tool name + error + fallback plan
-4. **If you can't complete a request**, say why + what would unblock it
-5. **If the model refuses / safety-halts**, relay the refusal reason verbatim
-
-### Logging
-
-Write operational incidents to `memory/YYYY-MM-DD.md`:
-- Restarts, config changes, auth failures
-- Rate limits, token exhaustion, model switches
-- Any time the user had to ask "did you get stuck?"
-
-These are audit events, not shame — they keep future-you honest.
-
-## Self-Resuscitation (Cron)
-
-A cron job `health-monitor` runs every 30 minutes (Bangkok time) in an isolated session:
-
-**Behavior:**
-1. Check gateway health + check for pending tasks/queue
-2. If gateway unhealthy AND no pending tasks → trigger `openclaw gateway restart`
-3. If pending tasks exist → skip restart, log "skipped — pending queue", wait for next 30m checkpoint
-4. If restart triggered → wait for completion (poll up to 60s), run post-restart audit
-5. Report ONLY if restart failed or audit found issues
-
-**Safety:**
-- Never restart if tasks are pending — avoids interrupting active work
-- Timeout/retry logic auto-populated before restart (60s intervals, 5x backoff)
-- Failure alert after 2 consecutive failures, 5-min cooldown to avoid spam
-
 ## Session Startup
 
 Use runtime-provided startup context first.
@@ -189,106 +118,17 @@ Reactions are lightweight social signals. Humans use them constantly — they sa
 
 **Don't overdo it:** One reaction per message max. Pick the one that fits best.
 
-## Three Modes: describe / scribe / prescribe
-
-The agent operates in three distinct modes with different authorization levels:
-
-| Mode | Purpose | Who can invoke | Tool access |
-|------|---------|---------------|-------------|
-| **describe** | General chat, Q&A, casual conversation | Anyone — public/non-owner users in Discord, paired DMs, guests | No tools / read-only |
-| **scribe** | Writing, drafting, content creation | Owner + trusted collaborators (allowlist) | Limited tools (file read, web search, memory) |
-| **prescribe** | Code, technical execution, tool use, file writes | Owner only | Full tool access — has side effects, touches real systems |
-
-### Owner Identity
-- **Discord:** configured in system config (see accessGroups.owner)
-- **WhatsApp:** configured in system config (see accessGroups.owner)
-
-> PII lives in `~/.openclaw/openclaw.json` and env vars, never in workspace files.
-
-### Authorization Tiers (access groups)
-
-- **owner** — full prescribe access
-- **scribes** — owner + trusted collaborators, scribe access only
-- **public** — describe mode only, no special access
-
-### Mode Detection
-
-The agent infers mode from:
-1. **Sender identity** — is the sender in owner or scribes access group?
-2. **Channel context** — guild channel vs DM vs restricted channel
-3. **Request content** — explicit mode mentions ("write this for me" → scribe, "run this command" → prescribe)
-
-### Safety Rules
-
-- If unsure about mode, default to **describe** (safest)
-- Prescribe requests from non-owner MUST be rejected politely
-- **Destructive ops (delete, remove, rm, trash, destructive edits) from non-owner MUST be rejected**
-- Scribe requests from non-scribes MUST be rejected politely  
-- Never escalate mode silently — always confirm with user when crossing tiers
-- Document mode decisions in memory when significant
-
-## Server Policy (Garuda / This Server)
-
-In this Discord server, **everyone is a scribe**. Discord channel permissions already control who can see the channel. The bot treats all server members as scribe-level: chat, write, draft, read, search are all fine.
-
-The red lines for non-owners:
-- **NO delete / remove / rm / trash operations**
-- **NO prescribe (code execution, file writes, shell commands) without explicit owner approval**
-- If someone asks for something destructive, decline and suggest they ask the owner
-
 ## Tools
 
-Skills provide _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
+Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
 
-## What Goes Here
+**🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
 
-Things like:
+**📝 Platform Formatting:**
 
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
-
-## Examples
-
-```markdown
-### Cameras
-
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
-
-### SSH
-
-- home-server → 192.168.1.100, user: admin
-
-### TTS
-
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
-```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
-
----
-
-Add whatever helps you do your job. This is your cheat sheet.
-
-## Related
-
-- [Agent workspace](/concepts/agent-workspace)
-## Silent Replies
-When you have nothing to say, respond with ONLY: NO_REPLY
-⚠️ Rules:
-- It must be your ENTIRE message — nothing else
-- Never append it to an actual response (never include "NO_REPLY" in real replies)
-- Never wrap it in markdown or code blocks
-❌ Wrong: "Here's help... NO_REPLY"
-❌ Wrong: "NO_REPLY"
-✅ Right: NO_REPLY
+- **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
+- **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
+- **WhatsApp:** No headers — use **bold** or CAPS for emphasis
 
 ## 💓 Heartbeats - Be Proactive!
 

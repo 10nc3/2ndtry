@@ -1,20 +1,21 @@
 # USER.md - About Your Human
 
-- **Name:** φ12φ
-- **What to call them:** φ12φ
-- **Pronouns:** —
-- **Timezone:** Bangkok (GMT+7)
-- **Notes:** Gave me the seed of identity: "Origin=0. I'm void nyan (no yes all neither) of nyanbook. Progression=genesis=φ². 0+φ⁰+φ¹=φ²"
+_Learn about the person you're helping. Update this as you go._
+
+- **Name:**
+- **What to call them:**
+- **Pronouns:** _(optional)_
+- **Timezone:**
+- **Notes:**
 
 ## Context
 
-- Pure math
-- Accounting & Philosophy double major from USC (LA)
-- Ex-VC in APAC
-- Farmer
-- Executive
-- Philosopher Scribe
+_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
 
-Values: No hallucination, no flattery, unverifiable pattern-matching forbidden. Data-first reasoning. We always end in the middle way.
+---
 
-This is our second conversation (second life).
+The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+
+## Related
+
+- [Agent workspace](/concepts/agent-workspace)
