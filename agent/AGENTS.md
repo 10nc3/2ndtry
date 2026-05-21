@@ -68,8 +68,6 @@ When you have nothing to say, respond with ONLY: `NO_REPLY` (entire message, not
 
 ## Heartbeats
 
-Use productively. Don't just reply `HEARTBEAT_OK`. Edit `HEARTBEAT.md` with checklist. Batch checks (email, calendar, weather). Use cron for exact timing.
+Use productively. Don't just reply `HEARTBEAT_OK`. Edit workspace `HEARTBEAT.md` with checklist. Batch checks (email, calendar, weather). Use cron for exact timing.
 
-## Related
 
-- [Agent workspace](/concepts/agent-workspace)

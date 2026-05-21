@@ -4,11 +4,26 @@
 
 set -e
 
-REPO_ROOT="/Users/avijja/.openclaw/workspace"
+REPO_ROOT="${OPENCLAW_WORKSPACE:-$HOME/.openclaw/workspace}"
 ENV_FILE="$HOME/.openclaw/.env"
 
 if [[ ! -f "$ENV_FILE" ]]; then
     echo "Error: $ENV_FILE not found. PAT not stored."
+    exit 1
+fi
+
+# Derive repo slug from git remote (fallback to env)
+REMOTE_URL=$(cd "$REPO_ROOT" && git remote get-url origin 2>/dev/null || echo "")
+if [[ -z "$REMOTE_URL" ]]; then
+    echo "Error: no git remote configured in $REPO_ROOT"
+    exit 1
+fi
+
+# Extract owner/repo from HTTPS or SSH remote
+# Handles: https://github.com/owner/repo.git or git@github.com:owner/repo.git
+REPO_SLUG=$(echo "$REMOTE_URL" | sed -E 's|.*github.com[/:]([^/]+/[^/]+)(\.git)?$|\1|')
+if [[ -z "$REPO_SLUG" ]]; then
+    echo "Error: could not parse repo slug from remote: $REMOTE_URL"
     exit 1
 fi
 
@@ -23,12 +38,12 @@ fi
 cd "$REPO_ROOT"
 
 # Temporarily set remote with PAT
-git remote set-url origin "https://10nc3:${PAT}@github.com/10nc3/2ndtry.git"
+git remote set-url origin "https://10nc3:${PAT}@github.com/${REPO_SLUG}.git"
 
 # Push with any extra args passed through
 git push "$@"
 
 # Scrub PAT from remote immediately
-git remote set-url origin https://github.com/10nc3/2ndtry.git
+git remote set-url origin "https://github.com/${REPO_SLUG}.git"
 
 echo "✅ Pushed. PAT scrubbed from remote."

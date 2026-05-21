@@ -11,7 +11,7 @@ Lean agent configuration for OpenClaw. Optimized for 32K context budget on local
 │   ├── SOUL.md         # Personality (~480 tok)
 │   ├── IDENTITY.md     # Agent identity (~190 tok)
 │   ├── USER.md         # Human context (~150 tok)
-│   ├── HEARTBEAT.md    # Heartbeat checklist (~60 tok, heartbeat only)
+│   ├── HEARTBEAT.md    # Heartbeat checklist (workspace root, ~60 tok, heartbeat only)
 │   └── RUNBOOK.md      # Tier 2: errors, audit, resuscitation (load on demand)
 ├── reference/          # Tier 2: loaded on trigger keywords only
 │   ├── PHILOSOPHY.md   # Load on philosophy queries
