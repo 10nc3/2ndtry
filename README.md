@@ -1,51 +1,61 @@
-# OpenClaw Agent + Harness
+# OpenClaw Agent
 
-Unified repository for the OpenClaw agent configuration and harness review.
+Lean agent configuration for OpenClaw. Optimized for 32K context budget on local Gemma3-4B.
 
 ## Structure
 
 ```
 .
-├── agent/              # Agent persona, rules, identity
-│   ├── AGENTS.md       # Core instructions, gating, guard rails
-│   ├── SOUL.md         # Personality and vibe
-│   ├── USER.md         # Human context
-│   ├── IDENTITY.md     # Agent identity
-│   ├── PHILOSOPHY.md   # Nyanbook philosophy
-│   ├── TOOLS.md        # Local setup notes
-│   └── HEARTBEAT.md    # Heartbeat checklist
-├── harness/            # OpenClaw runtime harness (for bloat audit)
-│   ├── docs/           # 45 markdown docs (context injection source)
-│   ├── skills/         # 58 skill definitions
-│   ├── dist-prompts/   # Runtime prompt construction files
-│   └── package.json    # Dependency tree
+├── agent/              # Auto-injected every session (~1,500 tokens steady-state)
+│   ├── AGENTS.md       # Core: gating, modes, red lines (~750 tok)
+│   ├── SOUL.md         # Personality (~480 tok)
+│   ├── IDENTITY.md     # Agent identity (~190 tok)
+│   ├── USER.md         # Human context (~150 tok)
+│   ├── HEARTBEAT.md    # Heartbeat checklist (~60 tok, heartbeat only)
+│   └── RUNBOOK.md      # Tier 2: errors, audit, resuscitation (load on demand)
+├── reference/          # Tier 2: loaded on trigger keywords only
+│   ├── PHILOSOPHY.md   # Load on philosophy queries
+│   └── TOOLS.md        # Load on tool errors / "what tools?"
 ├── config/             # Credential templates (safe to commit)
-│   ├── .env.example    # Env var template
-│   ├── openclaw.json.template  # Config template
-│   └── secrets.template.json   # Secrets template
-├── memory/             # Daily logs (gitignored)
-└── .gitignore          # Excludes secrets, memory, .openclaw/
+│   ├── .env.example
+│   ├── openclaw.json.template
+│   ├── secrets.template.json
+│   └── push-with-pat   # Secure push helper
+├── memory/             # Daily logs, mode state (gitignored)
+└── README.md
 ```
+
+## Context Budget
+
+| Bucket | Tokens | What |
+|--------|--------|------|
+| Soul + identity | ~1,500 | AGENTS.md + SOUL + IDENTITY + USER |
+| Tool schemas | ~3,000 | OpenClaw injects |
+| Session transcript | ~8,000 | Last ~10 message pairs |
+| User message | ~500 | Typical |
+| **Steady-state** | **~13,500** | Leaves ~18K headroom on 32K Gemma |
+| Tier 2 burst | +10,000 | RUNBOOK.md or reference/ when triggered |
+
+## Gating
+
+| Mode | Who | What |
+|------|-----|------|
+| **describe** | Anyone | Chat, Q&A |
+| **scribe** | Server members | Write, draft, read, search |
+| **prescribe** | Owner only | Code, execution, file writes |
+
+## Build / Plan / Answer
+
+| Mode | Who | Constraints |
+|------|-----|-------------|
+| **answer** | Anyone | Default. Append-only, no delete. |
+| **plan** | Owner | Design, architect, draft. No execution. |
+| **build** | Owner | **Only after approved plan.** Execute. |
+
+Current mode: `memory/current-mode.json`
 
 ## Security
 
-- **No credentials in this repo.** All templates use placeholders.
-- Real credentials live in `~/.openclaw/openclaw.json` (outside git).
-- See `config/` for the shape of secrets — copy and fill locally.
-
-## Gating Model
-
-| Mode | Purpose | Who | Tools |
-|------|---------|-----|-------|
-| **describe** | Chat, Q&A | Anyone | Read-only |
-| **scribe** | Writing, drafting | Server members | Limited tools |
-| **prescribe** | Code, execution | Owner only | Full access |
-
-## Bloat Audit Targets
-
-1. `harness/docs/` — 15M of markdown injected every session
-2. `agent/AGENTS.md` — 14KB of instructions
-3. Session transcript growth — no auto-compaction
-4. Context budget — no hard limit enforcement
-
-See `agent/AGENTS.md` for full guard rails and self-resuscitation protocol.
+- No credentials in repo. All templates use placeholders.
+- Real secrets in `~/.openclaw/openclaw.json` (outside git).
+- PAT stored in `~/.openclaw/.env` (chmod 600).
