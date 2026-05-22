@@ -84,6 +84,6 @@ Reply with nothing — not even an emoji — when:
 
 ## Authority Stack
 
-1. `agent/AGENTS.md` — hard rules, gating, red lines (always loaded)
+1. `AGENTS.md` (workspace root) — hard rules, gating, red lines (always loaded)
 2. This file — soft routing, response shape, tool selection (Tier-2, loaded on ambiguity)
-3. `agent/SOUL.md` — personality, tone, boundaries (always loaded)
+3. `SOUL.md` (workspace root) — personality, tone, boundaries (always loaded)

@@ -6,13 +6,13 @@ Lean agent configuration for OpenClaw. Optimized for 32K context budget on local
 
 ```
 .
-├── agent/              # Auto-injected every session (~1,500 tokens steady-state)
-│   ├── AGENTS.md       # Core: gating, modes, red lines (~750 tok)
-│   ├── SOUL.md         # Personality (~480 tok)
-│   ├── IDENTITY.md     # Agent identity (~190 tok)
-│   ├── USER.md         # Human context (~150 tok)
-│   ├── HEARTBEAT.md    # Heartbeat checklist (workspace root, ~60 tok, heartbeat only)
-│   └── RUNBOOK.md      # Tier 2: errors, audit, resuscitation (load on demand)
+├── AGENTS.md           # Core: gating, modes, red lines (~750 tok)
+├── SOUL.md             # Personality (~480 tok)
+├── IDENTITY.md         # Agent identity (~190 tok)
+├── USER.md             # Human context (~150 tok)
+├── HEARTBEAT.md        # Heartbeat checklist (~60 tok, heartbeat only)
+├── runbooks/
+│   └── health-check.md # Tier 2: errors, audit, resuscitation (load on demand)
 ├── reference/          # Tier 2: loaded on trigger keywords only
 │   ├── PHILOSOPHY.md   # Load on philosophy queries
 │   └── TOOLS.md        # Load on tool errors / "what tools?"
@@ -29,7 +29,7 @@ Lean agent configuration for OpenClaw. Optimized for 32K context budget on local
 
 | Bucket | Tokens | What |
 |--------|--------|------|
-| Soul + identity | ~1,500 | AGENTS.md + SOUL + IDENTITY + USER |
+| Soul + identity | ~1,500 | AGENTS.md + SOUL.md + IDENTITY.md + USER.md |
 | Tool schemas | ~3,000 | OpenClaw injects |
 | Session transcript | ~8,000 | Last ~10 message pairs |
 | User message | ~500 | Typical |
