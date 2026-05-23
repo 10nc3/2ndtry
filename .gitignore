@@ -14,3 +14,13 @@ node_modules/
 
 # OS files
 .DS_Store
+# nyanbook secrets (env-based)
+.env.nyanbook
+*.secrets.json
+
+# GitHub personal access token (never commit)
+.github-token
+GITHUB_TOKEN
+
+# Workspace runtime files
+.nyan-sync-last

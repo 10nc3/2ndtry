@@ -6,6 +6,17 @@ This folder is home. Treat it that way.
 
 Use runtime-provided startup context first: `AGENTS.md`, `SOUL.md`, `USER.md`, recent daily memory.
 
+**NEW — Context Router v2:** Before loading memory, call `lib/context-router.js` to determine which experts to load. This reduces token bloat from ~374K to ~2K per query.
+
+**Always loaded:** `USER.md`, `IDENTITY.md`, `SOUL.md` (~673 tokens)
+
+**Trigger-loaded:** Based on query keywords
+- `φ|phi|nyan|genesis|dimension|koan` → `reference/PHILOSOPHY.md`
+- `remember|past|yesterday|history` → `memory/rolling-summary.md`
+- `price|weather|stock|api|tool` → `TOOLS.md`
+- `how to|procedure|runbook` → `runbooks/*.md`
+- `build|pipeline|architecture` → `runbooks/BUILD-v2.md`
+
 Do not manually reread startup files unless the user explicitly asks, context is missing something needed, or deeper follow-up is required.
 
 ## Memory
@@ -61,6 +72,51 @@ Second axis for owner-only work. Stored in `memory/current-mode.json`.
 **Transitions:** `answer → plan → build`. Build requires approved plan. Auto-reset to answer after build.
 
 **UI access:** Discord = answer for server, plan/build for owner DMs. TUI/dashboard = full prescribe (local physical access).
+
+## Context Router v2 — Expert Loading
+
+**Location:** `lib/context-router.js`
+
+**Usage:**
+```javascript
+const { route, getExpertFiles } = require('./lib/context-router');
+const experts = route(query);              // e.g. ['core', 'philosophy']
+const files = getExpertFiles(experts);      // ['USER.md', 'IDENTITY.md', 'SOUL.md', 'reference/PHILOSOPHY.md']
+```
+
+**Token savings:** ~374K → ~2K per query (99%+ reduction)
+
+## Math Satellites (On-Demand)
+
+**ψ-EMA Compass:** `lib/math/psi-ema.js` — 3D time-series oscillation observer (θ, z, R). Zero dependencies.
+**Seed Metric:** `lib/math/seed-metric.js` — Deterministic affordability: `(LCU/sqm × 700) ÷ Income`.
+
+Load only when query matches `psi-ema|stock|θ|z|R|seed metric|affordability|fertility|700m²`.
+
+## Memory & Safety Satellites (On-Demand)
+
+**φ-8 Memory Compressor:** `lib/memory-compress.js` — Sliding window (8 msgs) + 5-sentence summary every 2nd query (5/8 ≈ 1/φ).
+**PII Guard:** `lib/pii-guard.js` — Strip email/phone/SSN/credit-card/IP before logging or external output.
+**Temperature Router:** `lib/temperature-router.js` — Map cognitive task to optimal LLM temperature (0 deterministic → 0.7 creative).
+**Strike Chain:** `lib/strike-chain.js` — Self-healing provider demotion: 3 failures → back of chain, 5-min cooldown → auto-recover.
+
+## Pipeline Architecture (8-Stage)
+
+Every significant interaction follows the pipeline:
+
+| Stage | Name | What Happens |
+|-------|------|-------------|
+| S-1 | Context Extract | Load memory, detect entities |
+| S-1.5 | Query Digest | Classify intent (C/R/U/D) |
+| S0 | Preflight | Mode detection (answer/plan/build) |
+| S1 | Context Build | Expert routing, file injection |
+| S2 | Reasoning | LLM call |
+| S3 | Audit | Verify no hallucination, data-backed |
+| S4 | Retry | Search augmentation if needed |
+| S5 | Personality | Apply SOUL.md formatting |
+| S6 | Output | Write to memory, finalize |
+
+**Audit artifact:** Every pipeline run produces a DataPackage (see `utils/data-package.js`)
 
 ## Silent Replies
 
