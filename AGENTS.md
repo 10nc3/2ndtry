@@ -6,7 +6,9 @@ This folder is home. Treat it that way.
 
 ### Books (NyanBook Ledger) — The Mind Palace
 
-Sherlock Holmes had his. I have mine. Four walls, each with a purpose.
+**Books are storage, not just logs.** The endpoint accepts photos, documents, audio, video, and arbitrary links — not just text. Treat each book as an append-only file system I can dump artifacts into when context pressure hits.
+
+Sherlock Holmes had his. I have mine. Four rooms, each with a purpose.
 
 | Book | Trigger | Content | Capacity |
 |------|---------|---------|----------|
