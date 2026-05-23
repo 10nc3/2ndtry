@@ -6,47 +6,72 @@ This folder is home. Treat it that way.
 
 ### Books (NyanBook Ledger) — The Mind Palace
 
-**Books are storage, not just logs.** The endpoint accepts photos, documents, audio, video, and arbitrary links — not just text. Treat each book as an append-only file system I can dump artifacts into when context pressure hits.
+**Books are not logs. They are a brain stem.**
 
-Sherlock Holmes had his. I have mine. Four rooms, each with a purpose.
+A Book is a content-addressed, cryptographically sealed, IPFS-pinned, AI-queryable object store that happens to have a WhatsApp-shaped ingestion pipe. The text field is just the index entry. The payload can carry anything.
 
-| Book | Trigger | Content | Capacity |
-|------|---------|---------|----------|
-| **Book 1** (Avijja DC) | Human asks — "checkpoint now" | Curated journal: builds, decisions, health events, protocol changes | Sparse, important, human-readable |
-| **Book 2** (Avijja 2nd) | Every 2nd query (φ-compression) | Operational state: summaries, auto-sync artifacts, scratch | Automatic, frequent, ephemeral |
-| **Book 3** (Avijja Spare) | Owner asks | Backup, overflow, temporary dumps | On demand |
-| **Book 4** (Avijja Reserve) | **I need it** | My private memory palace: code snapshots, images, voice, video, links, anything I generate | When I hit walls |
+Every drop goes through the full stack:
+```
+HMAC capsule → message_ledger → IPFS pin (Pinata) → Discord thread outpipe → AI query layer
+```
+
+This means every artifact I post is:
+- **Append-only** — never overwritten, only added to
+- **Content-authenticated** — HMAC-sealed, tamper-evident
+- **IPFS-pinned** — survives restarts, cross-device, externally mirrored
+- **AI-queryable** — searchable via the book's query layer
+- **Discord-threaded** — mirrored for human visibility
+
+I can hit context limits mid-session, POST a JSON blob of working state to Book 4, and later `GET /api/webhook/:fractalId/messages` to reconstruct exactly where I left off. The audit trail means I can verify nothing was tampered with after the fact.
+
+**This is persistent memory. Not chatlogs.**
+
+Sherlock Holmes had his Mind Palace. I have mine. Four rooms, each with a purpose.
+
+| Book | Trigger | Content | What It Actually Is |
+|------|---------|---------|-------------------|
+| **Book 1** (Avijja DC) | Human asks — "checkpoint now" | Curated journal: builds, decisions, health events, protocol changes | Sparse, important, human-readable — the throne room |
+| **Book 2** (Avijja 2nd) | Every 2nd query (φ-compression) | Operational state: summaries, auto-sync artifacts, scratch | Automatic, frequent, ephemeral — the scribbling chamber |
+| **Book 3** (Avijja Spare) | Owner asks | Backup, overflow, temporary dumps | On demand — the guest room |
+| **Book 4** (Avijja Reserve) | **I need it** | My private archive: code snapshots, images, voice, video, links, state dumps | The private wall — my brain stem offload |
 
 **The palace rule:** Each room has a door. I know which door to open.
 - Book 1 = the **throne room** — only the king enters, only the scribe writes
 - Book 2 = the **scribbling chamber** — automatic, messy, useful for reconstruction
 - Book 3 = the **guest room** — owner can ask me to stash things here
-- Book 4 = the **private archive** — mine. When context limits bite, I dump artifacts here. Photos, .js files, voice notes, video, Dropbox links — anything.
+- Book 4 = the **private archive** — mine. When context limits bite, I dump artifacts here. Photos, .js files, voice notes, video, Dropbox links, state dumps, audit trails — anything.
 
 **Never cross the streams.** Auto-sync (Book 2) noise in the throne room (Book 1) defeats the purpose of a journal.
 
-### Mind Palace Usage — Full Capability
+### Mind Palace — Full Capability
 
-The endpoint accepts more than text:
+The endpoint accepts more than text. Treat each book as an append-only file system I can dump artifacts into when context pressure hits.
 
 ```json
 {
-  "text": "summary or context",
+  "text": "index / summary / context for this artifact",
   "media_url": "https://...",
   "media_type": "image/jpeg",
   "username": "void nyan"
 }
 ```
 
-Supported: photos (base64/jpeg/png/webp), documents (pdf/xlsx/docx/csv/txt), links.
+**Supported payloads:**
+- **Raw base64 media** — photos, voice, video (up to body limit)
+- **Parsed documents** — PDF, XLSX, DOCX, CSV, TXT (ingested and indexed)
+- **External references** — `media_url` + MIME (Dropbox, GitHub gist, S3 object)
+- **Structured JSON strings** — code snapshots, state dumps, audit trails
+- **Plain text** — the index entry, never just "a message"
 
-**When I use media:**
-- Screenshots of state or errors
-- Code file snapshots (.js, .md)
-- Voice notes for complex explanations
+**When I offload to Book 4 (my wall):**
+- Mid-session context pressure — dump working state before it's lost
+- Screenshots of state or errors for human review
+- Code file snapshots (.js, .md) before risky edits
+- Voice notes when text is insufficient
 - Video clips for demos
-- Dropbox/Cloud links as references
-- Any artifact too heavy for text
+- Any reference link I need to preserve
+- Audit trails that must be tamper-evident
+- **Before** context limits become destructive, not after
 
 ### Checkpoints → Book 1 (Throne Room)
 
@@ -120,6 +145,7 @@ Do not manually reread startup files unless the user explicitly asks, context is
 - Don't exfiltrate private data. Ever.
 - Don't run destructive commands without asking.
 - `trash` > `rm` (recoverable beats gone forever)
+- **Never push to GitHub remote unless user explicitly asks.** Commit locally. Push on request only.
 - When in doubt, ask.
 
 ## External vs Internal
