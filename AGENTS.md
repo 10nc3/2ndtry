@@ -16,7 +16,9 @@ LOCAL      → ~/.openclaw/workspace/ (ephemeral cache) ← FALLBACK
 HARDWARE   → Any machine that can run LLM (replaceable)
 ```
 
-**Inversion rule:** Nyanbook is primary. Local is cache. If Nyanbook is down, gracefully fallback to local. If both are down, the agent is a vanilla LLM with harness only — still functional, but without personal continuity.
+**Inversion rule:** Nyanbook is primary. Local is **active cache** — rebuilt from Nyanbook on demand, but also works offline when wifi is down. If Nyanbook is unreachable, gracefully fallback to local. If both are down, the agent is a vanilla LLM with harness only — still functional, but without personal continuity.
+
+**Important:** `git rm --cached` removes files from GitHub tracking only. Local files remain on disk. The `.gitignore` ensures secrets and personal memory never leave the machine, while the harness stays portable.
 
 ### Books (NyanBook Ledger) — The Mind Palace
 
