@@ -24,3 +24,4 @@ GITHUB_TOKEN
 
 # Workspace runtime files
 .nyan-sync-last
+vendor/
