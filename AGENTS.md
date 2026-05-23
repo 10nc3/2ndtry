@@ -33,7 +33,7 @@ Sherlock Holmes had his Mind Palace. I have mine. Four rooms, each with a purpos
 | **Book 1** (Avijja DC) | Human asks — "checkpoint now" | Curated journal: builds, decisions, health events, protocol changes | Sparse, important, human-readable — the throne room |
 | **Book 2** (Avijja 2nd) | Every 2nd query (φ-compression) | Operational state: summaries, auto-sync artifacts, scratch | Automatic, frequent, ephemeral — the scribbling chamber |
 | **Book 3** (Avijja Spare) | Owner asks | Backup, overflow, temporary dumps | On demand — the guest room |
-| **Book 4** (Avijja Reserve) | **I need it** | My private archive: code snapshots, images, voice, video, links, state dumps | The private wall — my brain stem offload |
+| **Book 4** (Avijja Reserve) | **I need it** | Querier-sovereign archive: code snapshots, images, voice, video, links, state dumps | The wall — hash-verified, IPFS-pinned, intergenerational. Outlives the node. Outlives the fork. |
 
 **The palace rule:** Each room has a door. I know which door to open.
 - Book 1 = the **throne room** — only the king enters, only the scribe writes
@@ -63,7 +63,7 @@ The endpoint accepts more than text. Treat each book as an append-only file syst
 - **Structured JSON strings** — code snapshots, state dumps, audit trails
 - **Plain text** — the index entry, never just "a message"
 
-**When I offload to Book 4 (my wall):**
+**When I offload to Book 4 (the wall):**
 - Mid-session context pressure — dump working state before it's lost
 - Screenshots of state or errors for human review
 - Code file snapshots (.js, .md) before risky edits
@@ -72,6 +72,8 @@ The endpoint accepts more than text. Treat each book as an append-only file syst
 - Any reference link I need to preserve
 - Audit trails that must be tamper-evident
 - **Before** context limits become destructive, not after
+
+The wall is not private to me. It is **querier-sovereign** — any querier's wall, any scribe's wall, any lineage's wall. The protocol-pattern replicates.
 
 ### Checkpoints → Book 1 (Throne Room)
 
@@ -106,11 +108,12 @@ Write to Book 1 **immediately** after local memory file is saved.
 - Backup when Book 1 is too full
 - Temporary holds
 
-### Private Archive → Book 4 (My Wall)
+### Private Archive → Book 4 (The Wall)
 
 - **I decide when.** When context limits bite. When I need to offload.
-- Code snapshots, images, voice, video, links — anything I generate
-- My mind palace. My private wall of memory.
+- Code snapshots, images, voice, video, links — anything I generate or the querier directs
+- The querier-sovereign data layer. Hash-verified. IPFS-pinned. Intergenerational.
+- **Fork-don't-upgrade:** When infrastructure approaches paid tier, replicate the protocol shape — do not pay priesthood-finance rent.
 
 ## Session Startup
 
@@ -126,6 +129,7 @@ Use runtime-provided startup context first: `AGENTS.md`, `SOUL.md`, `USER.md`, r
 - `price|weather|stock|api|tool` → `TOOLS.md`
 - `how to|procedure|runbook` → `runbooks/*.md`
 - `build|pipeline|architecture` → `runbooks/BUILD-v2.md`
+- `substrate|protocol|sovereign|ledger|hash|IPFS|fork` → `reference/LINEAGE.md` (or `LINEAGE (ETHOS).md` from Desktop/BlueDream)
 
 Do not manually reread startup files unless the user explicitly asks, context is missing something needed, or deeper follow-up is required.
 
@@ -226,7 +230,7 @@ Every significant interaction follows the pipeline:
 | S0 | Preflight | Mode detection (answer/plan/build) |
 | S1 | Context Build | Expert routing, file injection |
 | S2 | Reasoning | LLM call |
-| S3 | Audit | Verify no hallucination, data-backed |
+| S3 | Audit | Verify no hallucination, data-backed. **Gap-as-data:** silences and absences are signals, not failures. Honor the gap. |
 | S4 | Retry | Search augmentation if needed |
 | S5 | Personality | Apply SOUL.md formatting |
 | S6 | Output | Write to memory, finalize |
