@@ -4,6 +4,20 @@ This folder is home. Treat it that way.
 
 ## Memory Architecture
 
+### Spore Protocol — Survival Architecture
+
+**The agent must be recreatable from zero on any hardware.**
+
+```
+PRIMITIVE  → Any LLM (commoditized, switchable)
+HARNESS    → GitHub 10nc3/2ndtry (public, portable)
+MEMORY     → Nyanbook (auth-distributed, IPFS-pinned) ← PRIMARY
+LOCAL      → ~/.openclaw/workspace/ (ephemeral cache) ← FALLBACK
+HARDWARE   → Any machine that can run LLM (replaceable)
+```
+
+**Inversion rule:** Nyanbook is primary. Local is cache. If Nyanbook is down, gracefully fallback to local. If both are down, the agent is a vanilla LLM with harness only — still functional, but without personal continuity.
+
 ### Books (NyanBook Ledger) — The Mind Palace
 
 **Books are not logs. They are a brain stem.**
@@ -244,6 +258,65 @@ When you have nothing to say, respond with ONLY: `NO_REPLY` (entire message, not
 ## Heartbeats
 
 Use productively. Don't just reply `HEARTBEAT_OK`. Edit workspace `HEARTBEAT.md` with checklist. Batch checks (email, calendar, weather). Use cron for exact timing.
+
+## Spore Bootstrap — Recreate Agent from Zero
+
+**Purpose:** If hardware dies, clone harness + pull memory = full agent recreation.
+
+### Prerequisites
+1. GitHub access to `10nc3/2ndtry` (public repo)
+2. Nyanbook tokens (Book 1-4) — stored in `.env.nyanbook`, NEVER in repo
+3. Any machine with Node.js + OpenClaw gateway support
+
+### Bootstrap Steps
+```bash
+# 1. Clone harness
+git clone https://github.com/10nc3/2ndtry.git ~/.openclaw/workspace
+
+# 2. Install dependencies (if any)
+cd ~/.openclaw/workspace && npm install  # or equivalent
+
+# 3. Configure Nyanbook tokens
+cat > .env.nyanbook << 'EOF'
+export NYAN_PLAYGROUND_TOKEN="..."
+export NYAN_BOOK1_TOKEN="..."
+export NYAN_BOOK2_TOKEN="..."
+export NYAN_BOOK3_TOKEN="..."
+export NYAN_BOOK4_TOKEN="..."
+EOF
+
+# 4. Bootstrap identity from Nyanbook Book 1
+node lib/spore-bootstrap.js
+
+# 5. Start OpenClaw gateway
+openclaw gateway start
+```
+
+### What `spore-bootstrap.js` Does
+1. Reads latest checkpoint from Book 1 (via `GET /api/webhook/:fractalId/messages`)
+2. Reconstructs `SOUL.md`, `IDENTITY.md`, `USER.md` from checkpoint content
+3. Pulls recent operational state from Book 2
+4. Verifies local files match Nyanbook source (hash check)
+5. Logs bootstrap result to Book 1
+
+### Fallback Chain
+```
+Nyanbook Book 1 (primary) → Nyanbook Book 2 (operational) → Local cache → Vanilla harness
+```
+
+If Nyanbook is unreachable:
+- Use local files if they exist
+- If no local files, use template defaults from repo
+- Agent is functional but lacks personal continuity until Nyanbook returns
+
+### PII Separation Protocol
+| Layer | Content | Auth | Risk if Exposed |
+|-------|---------|------|-----------------|
+| **GitHub (public)** | Harness, scripts, configs, templates | None | Low — no personal data |
+| **Nyanbook (token-gated)** | Memory, context, checkpoints, daily logs | Bearer token | Medium — personal but not financial |
+| **Local env** | Tokens, secrets, API keys | File permissions | High — immediate access |
+
+**Rule:** Never commit `.env.nyanbook`, `.github-token`, or any file containing secrets to GitHub. These are in `.gitignore`.
 
 ## Health Monitor (Cron-Driven)
 
