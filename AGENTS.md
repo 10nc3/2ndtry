@@ -23,6 +23,10 @@ Do not manually reread startup files unless the user explicitly asks, context is
 
 - **Daily notes:** `memory/YYYY-MM-DD.md` — raw logs
 - **Long-term:** `MEMORY.md` — curated wisdom (main session only, never in groups)
+- **φ-Memory (new):** `lib/phi-memory.js` — Two-tier: ephemeral φ-8 window + NyanBook ledger (IPFS)
+  - On session start: bootstrap from `ledgerRead('book_2', limit=5)`
+  - Every 2nd query: φ-8 compresses → `ledgerAppend('book_2')`
+  - Cross-device, survives restarts, searchable
 
 **Text > Brain** — write it down. Mental notes don't survive restarts.
 
