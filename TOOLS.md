@@ -2,43 +2,53 @@
 
 Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
 
-## What Goes Here
+## Active Tools (Enabled in OpenClaw)
 
-Things like:
+### Search Cascade
+- **Perplexity** — Deep research (needs `PPLX_API_KEY`)
+- **Brave** — `BSAFGRqYUSz68MvC6DzYSjaCXIq-LZr` (configured)
+- **DDG** — Free fallback, lossy
 
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
+### Math Cascade
+- **Wolfram Alpha** — Authoritative verification (needs `WOLFRAM_APP_ID`)
+- **Local math** — `lib/math/` (seed-metric, psi-ema) — deterministic, zero cost
+- **LLM heuristic** — Tagged `unverified`, last resort
 
-## Examples
+### Model Cascade
+- **Kimi K2.6** (OpenRouter) — Primary, high quality
+- **OpenRouter/auto** — Automatic fallback
+- **Gemma4 E4B** (Ollama @ localhost) — Local, free, always available
 
-```markdown
-### Cameras
+### PDF Cascade
+- **pdftotext** (poppler) — Best formatting, `brew install poppler`
+- **nano-pdf** skill — JS-based, always available
+- **Heuristic** — Raw text extraction, last resort
 
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
+### GitHub
+- **gh CLI** — `ghp_XLIU…EpnZ` (authenticated)
+- **Pat scopes**: repo, gist, workflow, etc (read:org missing — non-blocking for repos)
 
-### SSH
+### Summarize
+- **summarize.sh** — URL/article/video summarization (installing via brew)
 
-- home-server → 192.168.1.100, user: admin
+### NyanBook
+- **Playground** — `NYAN_PLAYGROUND_TOKEN` = outbound API token
+- **Ledger** — Book 1 (Avijja DC), Book 2 (agent sync)
+- **BYOK Watchtower** — Available, needs separate Groq key
 
-### TTS
+## Configuration Files
 
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
-```
+| File | Purpose |
+|------|---------|
+| `~/.openclaw/openclaw.json` | Gateway config, model selection, skill toggles |
+| `~/.openclaw/.env` | Secrets (Discord token, Brave key, etc) |
+| `~/.openclaw/workspace/.env.nyanbook` | NyanBook tokens |
+| `~/.openclaw/workspace/.github-token` | GitHub PAT |
 
-## Why Separate?
+## Graceful Degradation
 
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
+All cascades follow: **expensive/detailed first → cheap/free last**. See `reference/CASCADE-ARCHITECTURE.md`.
 
 ---
 
-Add whatever helps you do your job. This is your cheat sheet.
-
-## Related
-
-- [Agent workspace](/concepts/agent-workspace)
+*Add whatever helps you do your job. This is your cheat sheet.*
