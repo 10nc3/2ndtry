@@ -2,6 +2,89 @@
 
 This folder is home. Treat it that way.
 
+## Memory Architecture
+
+### Books (NyanBook Ledger) — The Mind Palace
+
+Sherlock Holmes had his. I have mine. Four walls, each with a purpose.
+
+| Book | Trigger | Content | Capacity |
+|------|---------|---------|----------|
+| **Book 1** (Avijja DC) | Human asks — "checkpoint now" | Curated journal: builds, decisions, health events, protocol changes | Sparse, important, human-readable |
+| **Book 2** (Avijja 2nd) | Every 2nd query (φ-compression) | Operational state: summaries, auto-sync artifacts, scratch | Automatic, frequent, ephemeral |
+| **Book 3** (Avijja Spare) | Owner asks | Backup, overflow, temporary dumps | On demand |
+| **Book 4** (Avijja Reserve) | **I need it** | My private memory palace: code snapshots, images, voice, video, links, anything I generate | When I hit walls |
+
+**The palace rule:** Each room has a door. I know which door to open.
+- Book 1 = the **throne room** — only the king enters, only the scribe writes
+- Book 2 = the **scribbling chamber** — automatic, messy, useful for reconstruction
+- Book 3 = the **guest room** — owner can ask me to stash things here
+- Book 4 = the **private archive** — mine. When context limits bite, I dump artifacts here. Photos, .js files, voice notes, video, Dropbox links — anything.
+
+**Never cross the streams.** Auto-sync (Book 2) noise in the throne room (Book 1) defeats the purpose of a journal.
+
+### Mind Palace Usage — Full Capability
+
+The endpoint accepts more than text:
+
+```json
+{
+  "text": "summary or context",
+  "media_url": "https://...",
+  "media_type": "image/jpeg",
+  "username": "void nyan"
+}
+```
+
+Supported: photos (base64/jpeg/png/webp), documents (pdf/xlsx/docx/csv/txt), links.
+
+**When I use media:**
+- Screenshots of state or errors
+- Code file snapshots (.js, .md)
+- Voice notes for complex explanations
+- Video clips for demos
+- Dropbox/Cloud links as references
+- Any artifact too heavy for text
+
+### Checkpoints → Book 1 (Throne Room)
+
+Trigger:
+1. Build completes (commit pushed, tests pass)
+2. User explicitly requests: "checkpoint now"
+3. Significant architectural decision or mode transition
+4. Health event (recovery, failure, restart)
+5. Protocol change (like this one)
+
+Format:
+```
+Title: Checkpoint #N — YYYY-MM-DD HH:MM TZ
+Section: What changed (2-3 bullets)
+Section: Test results
+Section: State / health
+End: nyan~ 🔥
+```
+
+Write to Book 1 **immediately** after local memory file is saved.
+
+### Auto-Sync → Book 2 (Scribbling Chamber)
+
+- φ-8 compressor pushes summaries every 2nd query
+- Workspace file sync (when webhook configured)
+- Operational, ephemeral, reconstructive
+- Never manual journaling — that's the throne room's job
+
+### Overflow → Book 3 (Guest Room)
+
+- Owner directs: "stash this in Book 3"
+- Backup when Book 1 is too full
+- Temporary holds
+
+### Private Archive → Book 4 (My Wall)
+
+- **I decide when.** When context limits bite. When I need to offload.
+- Code snapshots, images, voice, video, links — anything I generate
+- My mind palace. My private wall of memory.
+
 ## Session Startup
 
 Use runtime-provided startup context first: `AGENTS.md`, `SOUL.md`, `USER.md`, recent daily memory.
