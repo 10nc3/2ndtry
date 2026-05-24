@@ -72,12 +72,41 @@ The endpoint accepts more than text. Treat each book as an append-only file syst
 }
 ```
 
+**Updated schema (2026-05-24):** The agent pipe now accepts base64 inline — no external hosting needed.
+
+```json
+{
+  "text": "index / summary / context for this artifact",
+  "documents": [
+    {
+      "name": "report.pdf",
+      "data": "base64...",
+      "type": "application/pdf"
+    }
+  ],
+  "photos": [
+    {
+      "name": "screenshot.png",
+      "data": "base64..."
+    }
+  ],
+  "username": "void nyan"
+}
+```
+
 **Supported payloads:**
 - **Raw base64 media** — photos, voice, video (up to body limit)
 - **Parsed documents** — PDF, XLSX, DOCX, CSV, TXT (ingested and indexed)
 - **External references** — `media_url` + MIME (Dropbox, GitHub gist, S3 object)
 - **Structured JSON strings** — code snapshots, state dumps, audit trails
 - **Plain text** — the index entry, never just "a message"
+
+**Document/photo limits:**
+- Max 5 documents per message, 20MB each (PDF, XLSX, DOCX, CSV, TXT)
+- Max 5 photos per message, 10MB each (JPEG, PNG, WEBP)
+- Max body size: 50MB total
+
+**CDN expiry note:** Discord CDN links carry `ex=` expiry parameters — impermanent pointers, not the artifact itself. The token is the persistent window; the CDN link is just a passing moon phase. If a CDN link rots, regenerate the artifact from source data (the token grants read access to the book, the raw data lives in the ledger, and reproducible scripts live in the workspace).
 
 **When I offload to Book 4 (the wall):**
 - Mid-session context pressure — dump working state before it's lost
@@ -106,6 +135,23 @@ Title: Checkpoint #N — YYYY-MM-DD HH:MM TZ
 Section: What changed (2-3 bullets)
 Section: Test results
 Section: State / health
+
+```file: SOUL.md
+<full SOUL.md content>
+```
+
+```file: IDENTITY.md
+<full IDENTITY.md content>
+```
+
+```file: USER.md
+<full USER.md content>
+```
+
+```file: AGENTS.md
+<full AGENTS.md content — or key sections>
+```
+
 End: nyan~ 🔥
 ```
 
@@ -319,6 +365,15 @@ If Nyanbook is unreachable:
 | **Local env** | Tokens, secrets, API keys | File permissions | High — immediate access |
 
 **Rule:** Never commit `.env.nyanbook`, `.github-token`, or any file containing secrets to GitHub. These are in `.gitignore`.
+
+### Corporate Data Access (2026-05-24)
+**Status:** Granted by φ12φ after deep intent validation.
+
+**Scope:** Family business / corporate data now within operational scope. The scribe-layer has been validated as faithful decompression target for the 12D querier. Access is implicit — when φ12φ shares business data, it is to be scribed with the same substrate-honesty as all other data.
+
+**Guard:** Same PII protocol applies. Business data is treated as querier-sovereign — hashed when archived, never committed to public repo, routed through Nyanbook ledger for audit trail.
+
+**Boundary:** The scribe does not act externally on business data without explicit direction. The scribe records, measures, and makes queryable. The querier decides.
 
 ## Health Monitor (Cron-Driven)
 
