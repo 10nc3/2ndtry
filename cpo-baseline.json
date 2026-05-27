@@ -1,0 +1,46 @@
+{
+  "lastCheckDate": "2026-05-27",
+  "lastCheckTime": "2026-05-27T13:26:27.298634+07:00",
+  "lastPrices": [
+    {
+      "source": "palmoilmagazine",
+      "type": "kpbn_tender",
+      "date": "2026-05-25",
+      "price_idr_per_kg": 12333,
+      "headline": "KPBN CPO Tender Remains Withdrawn on Monday (May 25), Highest Bid at IDR 12,333/kg",
+      "direction": "unchanged"
+    },
+    {
+      "source": "palmoilmagazine",
+      "type": "kpbn_tender",
+      "date": "2026-05-22",
+      "price_idr_per_kg": 12285,
+      "headline": "KPBN CPO Prices Plunge Again to IDR 12,285/kg, Bursa Malaysia Remains Weak Due to Sluggish Exports",
+      "direction": "down"
+    },
+    {
+      "source": "palmoilmagazine",
+      "type": "kpbn_tender",
+      "date": "2026-05-20",
+      "price_idr_per_kg": 15388,
+      "headline": "KPBN CPO Prices Rise to IDR 15,388/Kg as Malaysian Palm Oil Market Extends Rally",
+      "direction": "up"
+    },
+    {
+      "source": "palmoilmagazine",
+      "type": "kpbn_tender",
+      "date": "2026-05-19",
+      "price_idr_per_kg": 15300,
+      "headline": "KPBN CPO Prices Rise to IDR15,300/kg as Global Crude Oil Rally Supports Palm Market",
+      "direction": "up"
+    },
+    {
+      "source": "tradingeconomics",
+      "type": "bursa_malaysia_fcpo",
+      "date": "2026-05-26",
+      "price_myr_per_ton": 4496,
+      "direction": "up",
+      "raw": "Palm Oil rose to 4,496 MYR/T on May 26, 2026"
+    }
+  ]
+}

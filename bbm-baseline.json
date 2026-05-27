@@ -1,45 +1,52 @@
 {
-  "lastUpdated": "2026-05-23",
-  "verifiedBy": "Zeno (rekap-4mei + manual verification)",
-  "source": "manual-rekap-4mei-sumatera",
-  "focusZones": ["Sumatera"],
-  "zones": {
+  "focusZones": [
+    "Sumatera"
+  ],
+  "lastNotifiedAt": "2026-05-25T03:32:00+07:00",
+  "lastUpdated": "2026-05-25T21:09:47+07:00",
+  "source": "kompas-money-article-21mei2026",
+  "sourceUrl": "https://money.kompas.com/read/2026/05/21/081100226/cek-harga-dexlite-hari-ini-21-mei-2026-di-spbu-se-indonesia-ini-daftar-lengkap",
+  "lastBbmCheckDate": "2026-05-26",
+  "lastBbmPrices": {
     "Sumatera-Group-A": {
-      "provinces": "Aceh, Sumatera Utara, Jambi, Bengkulu, Sumatera Selatan, Bangka Belitung, Lampung",
-      "prices": {
-        "Pertalite": 10000,
-        "Pertamax": 12600,
-        "Pertamax Turbo": 20350,
-        "Pertamax Green 95": null,
-        "Dexlite": 26600,
-        "Pertamina Dex": 28500,
-        "Bio Solar": 6800
-      }
+      "Dexlite": 26600,
+      "Pertamina Dex": 28500,
+      "Bio Solar": 6800,
+      "zones": [
+        "Aceh",
+        "Sumatera Utara",
+        "Jambi",
+        "Bengkulu",
+        "Sumatera Selatan",
+        "Bangka Belitung",
+        "Lampung"
+      ]
     },
     "Sumatera-Group-B": {
-      "provinces": "Sumatera Barat, Riau, Kepulauan Riau",
-      "prices": {
-        "Pertalite": 10000,
-        "Pertamax": 12900,
-        "Pertamax Turbo": 20750,
-        "Pertamax Green 95": null,
-        "Dexlite": 27150,
-        "Pertamina Dex": 29100,
-        "Bio Solar": 6800
-      }
+      "Dexlite": 27150,
+      "Pertamina Dex": 29100,
+      "Bio Solar": 6800,
+      "zones": [
+        "Sumatera Barat",
+        "Riau",
+        "Kepulauan Riau"
+      ]
     },
     "FTZ-Sabang": {
-      "provinces": "Sabang (FTZ)",
-      "prices": {
-        "Pertalite": 10000,
-        "Pertamax": 11550,
-        "Pertamax Turbo": null,
-        "Pertamax Green 95": null,
-        "Dexlite": 24400,
-        "Pertamina Dex": null,
-        "Bio Solar": 6800
-      }
+      "Dexlite": 24400,
+      "Pertamina Dex": 28500,
+      "Bio Solar": 6800,
+      "zones": [
+        "Sabang"
+      ]
+    },
+    "FTZ-Batam": {
+      "Dexlite": 24700,
+      "Pertamina Dex": 28500,
+      "Bio Solar": 6800,
+      "zones": [
+        "Batam"
+      ]
     }
-  },
-  "lastNotifiedAt": null
+  }
 }

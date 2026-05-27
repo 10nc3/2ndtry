@@ -1,0 +1,31 @@
+{
+  "lastRunAt": null,
+  "lastBbmCheckDate": "2026-05-24",
+  "lastBbmPrices": {
+    "Sumatera-Group-A": {
+      "Dexlite": 26600,
+      "Pertamina Dex": 28500,
+      "Bio Solar": 6800
+    },
+    "Sumatera-Group-B": {
+      "Dexlite": 27150,
+      "Pertamina Dex": 29100,
+      "Bio Solar": 6800
+    },
+    "FTZ-Sabang": {
+      "Dexlite": 24400,
+      "Pertamina Dex": null,
+      "Bio Solar": 6800
+    }
+  },
+  "fuels_tracked": [
+    "Dexlite",
+    "Pertamina Dex",
+    "Bio Solar"
+  ],
+  "zones": [
+    "Sumatera-Group-A",
+    "Sumatera-Group-B",
+    "FTZ-Sabang"
+  ]
+}
